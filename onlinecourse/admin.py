@@ -1,8 +1,13 @@
 from django.contrib import admin
 # <HINT> Import any new Models here
-from .models import Course, Lesson, Instructor, Learner
+from .models import Course, Lesson, Instructor, Learner, Question, Choice
 
 # <HINT> Register QuestionInline and ChoiceInline classes here
+class QuestionInline(admin.StackedInline):
+    model = Question
+
+class ChoiceInline(admin.StackedInline):
+    model = Choice
 
 
 class LessonInline(admin.StackedInline):
@@ -23,7 +28,16 @@ class LessonAdmin(admin.ModelAdmin):
 
 
 # <HINT> Register Question and Choice models here
+class QuestionAdmin(admin.ModelAdmin):
+    inlines = [QuestionInline]
+    list_display = ('question_text', 'question_grade')
 
+class ChoiceAdmin(admin.ModelAdmin):
+    inlines = [ChoiceInline]
+    list_display = ('choice_content', 'is_correct')
+
+admin.site.register(Question)
+admin.site.register(Choice)
 admin.site.register(Course, CourseAdmin)
 admin.site.register(Lesson, LessonAdmin)
 admin.site.register(Instructor)
