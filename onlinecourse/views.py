@@ -104,26 +104,25 @@ def enroll(request, course_id):
 
 
 # <HINT> Create a submit view to create an exam submission record for a course enrollment,
-class SubmissionView(generic.DetailView):
-    template_name = 'onlinecourse/submit_details_bootstrap.html'
-    context_object_name = 'submit_details'
 # you may implement it based on following logic:
          # Add each selected choice object to the submission object
          # Redirect to show_exam_result with the submission id
 def submit(request, course_id):
     # Get user and course object, then get the associated enrollment object created when the user enrolled the course
-    course = get_object_or_404(Course, pk=course_id)
     user = request.user
+    course = get_object_or_404(Course, pk=course_id)
     enrollment = Enrollment.objects.get(user=user, course=course)
 
     # Create a submission object referring to the enrollment
     submission = Submission.objects.create(enrollment=enrollment)
 
     # Collect the selected choices from exam form
-    selected_choices = extract_answers(request)
+    answers = extract_answers(request)
+    submission.choices.set(answers)
+    submission.save()
 
     # Redirect to show exam result
-    return HttpResponseRedirect(reverse(viewname='onlinecourse:submit_details', args=(submission.id,)))
+    return HttpResponseRedirect(reverse(viewname='onlinecourse:show_exam_result', args=(course.id, submission.id,)))
 
 # <HINT> A example method to collect the selected choices from the exam form from the request object
 def extract_answers(request):
@@ -137,9 +136,6 @@ def extract_answers(request):
 
 
 # <HINT> Create an exam result view to check if learner passed exam and show their question results and result for each question,
-class ShowExamResult(generic.DetailView):
-    template_name = 'onlinecourse/show_exam_result_bootstrap.html'
-    context_object_name = 'show_exam_result'
 # you may implement it based on the following logic:
         # Get course and submission based on their ids
         # Get the selected choice ids from the submission record
@@ -147,8 +143,22 @@ class ShowExamResult(generic.DetailView):
         # Calculate the total score
 def show_exam_result(request, course_id, submission_id):
     course = get_object_or_404(Course, pk=course_id)
-    submission = get_object_or_404(Course, pk=submission_id)
-    choices = submit
+    submission = get_object_or_404(Submission, pk=submission_id)
+    choices = submission.choices.all()
+    total_result, result = 0, 0
+    for question in course.question_set.all():
+        total_results += question.grade
+        if question.is_get_score(choices):
+            results += question.grade
+
+    return render(
+        request,
+        'onlinecourse/exam_result_bootstrap.html',
+        {"course":course, "choices":choices,"result":result, 
+            "total_result": total_result, 
+            "submission": submission,
+            "grade": int((result / total_result) * 100) }
+    )
 
 
 
