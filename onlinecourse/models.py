@@ -124,7 +124,7 @@ class Question(models.Model):
     # Other fields and methods you would like to design
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_content = models.CharField(max_length=550, default="question text")
+    choice_content = models.CharField(max_length=550, default="choise text")
     is_correct = models.BooleanField(default = False)
 
 # <HINT> The submission model
