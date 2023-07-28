@@ -149,7 +149,7 @@ def show_exam_result(request, course_id, submission_id):
     for question in course.question_set.all():
         total_result += question.grade
         if question.is_get_score(choices):
-            results += question.grade
+            result += question.grade
 
     return render(
         request,
