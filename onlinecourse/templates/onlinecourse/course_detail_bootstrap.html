@@ -74,10 +74,10 @@
                         <div class="card mt-1">
                             <div class="card-header">
                                 <h5>{{question.title}}</h5>
-                                <h6>{{question_text}}</h6>
+                                <h6>{{question.question_text}}</h6>
                             </div>
                             {% csrf_token %}
-                            <b>{{question.question_text}}</b><br/>
+                            <b>{{question_text}}</b><br/>
                             <div class="form-group">
                                 {% for choice in question.choice_set.all %}
                                     <div class="form-check">
