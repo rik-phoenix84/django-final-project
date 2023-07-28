@@ -147,7 +147,7 @@ def show_exam_result(request, course_id, submission_id):
     choices = submission.choices.all()
     total_result, result = 0, 0
     for question in course.question_set.all():
-        total_results += question.grade
+        total_result += question.grade
         if question.is_get_score(choices):
             results += question.grade
 
