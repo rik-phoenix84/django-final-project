@@ -74,10 +74,17 @@
                         <div class="card mt-1">
                             <div class="card-header">
                                 <h5>{{question.title}}</h5>
+<<<<<<< HEAD
                                 <h6>{{question.question_text}}</h6>
                             </div>
                             {% csrf_token %}
                             <b>{{question_text}}</b><br/>
+=======
+                                <h6>{{question_text}}</h6>
+                            </div>
+                            {% csrf_token %}
+                            <b>{{question.question_text}}</b><br/>
+>>>>>>> 5b8f58a4d94d371acfb976b986aa60887811a657
                             <div class="form-group">
                                 {% for choice in question.choice_set.all %}
                                     <div class="form-check">
